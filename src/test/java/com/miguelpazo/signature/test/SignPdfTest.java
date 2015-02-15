@@ -55,7 +55,7 @@ public class SignPdfTest {
     }
 
     @Test
-    public void testMain() throws Exception {
+    public void main() throws Exception {
         signPdf();
 //        verifySign();
     }

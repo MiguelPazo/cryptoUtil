@@ -11,15 +11,19 @@ import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Calendar;
 import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
@@ -43,6 +47,7 @@ public class CertificateUtil {
     public static CertificateUtil instance;
 
     private CertificateUtil() {
+        Security.addProvider(new BouncyCastleProvider());
     }
 
     public static CertificateUtil getInstance() {
@@ -145,9 +150,9 @@ public class CertificateUtil {
         return pair;
     }
 
-    public PrivateKey loadPrivKey(File privKeyFile) throws Exception {
+    public PrivateKey loadPrivKey(File privateKey) throws Exception {
         // Remove the first and last lines
-        String key = readFileAsString(privKeyFile);
+        String key = readFileAsString(privateKey);
         String privKeyPEM = key.replace("-----BEGIN RSA PRIVATE KEY-----", "")
                 .replace("-----END RSA PRIVATE KEY-----", "");
 
@@ -161,6 +166,24 @@ public class CertificateUtil {
 
         // Display the results
         return privKey;
+    }
+
+    public PublicKey loadPublicKey(File publicKeyFile) throws Exception {
+        // Remove the first and last lines
+        String key = readFileAsString(publicKeyFile);
+        String publicKeyPEM = key.replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "");
+
+        // Base64 decode the data
+        byte[] encoded = Base64.decode(publicKeyPEM);
+
+        // PKCS8 decode the encoded RSA private key
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        PublicKey publicKey = kf.generatePublic(keySpec);
+
+        // Display the results
+        return publicKey;
     }
 
     /**
@@ -177,9 +200,6 @@ public class CertificateUtil {
      */
     private KeyPair generateAndConvertRsaKeyPair(long publicExponent,
             int strength, int certainty) throws Exception {
-
-        Security.addProvider(new BouncyCastleProvider());
-
         RSAKeyGenerationParameters genParam = new RSAKeyGenerationParameters(
                 BigInteger.valueOf(publicExponent), new SecureRandom(),
                 strength, certainty);
@@ -225,7 +245,7 @@ public class CertificateUtil {
         return fileData.toString();
     }
 
-    public void exportToPEM(Object obj, File fileName) throws Exception {
+    private void exportToPEM(Object obj, File fileName) throws Exception {
         OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(fileName));
         PEMWriter pem = new PEMWriter(output);
         pem.writeObject(obj);
