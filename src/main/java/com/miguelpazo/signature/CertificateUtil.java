@@ -1,8 +1,11 @@
 package com.miguelpazo.signature;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.security.Key;
@@ -12,9 +15,12 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Calendar;
 import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPairGenerator;
@@ -26,6 +32,7 @@ import org.bouncycastle.jce.PKCS10CertificationRequest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMWriter;
 import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.x509.X509V3CertificateGenerator;
 
 /**
  *
@@ -33,7 +40,88 @@ import org.bouncycastle.util.encoders.Base64;
  */
 public class CertificateUtil {
 
-    public static PKCS10CertificationRequest generateCSR(KeyPair keyPair, X500Principal subjectName, String fileCSR) throws Exception {
+    public static CertificateUtil instance;
+
+    private CertificateUtil() {
+    }
+
+    public static CertificateUtil getInstance() {
+        if (instance == null) {
+            instance = new CertificateUtil();
+        }
+
+        return instance;
+    }
+
+    public void signWithCA(File caCertFile, File caPrivateKey, PKCS10CertificationRequest requestCert, File cert) throws Exception {
+        InputStream inStream = null;
+
+        try {
+            inStream = new FileInputStream(caCertFile);
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            X509Certificate caCert = (X509Certificate) cf.generateCertificate(inStream);
+
+            Calendar startDate = Calendar.getInstance();
+            Calendar expiryDate = Calendar.getInstance();
+            expiryDate.add(Calendar.YEAR, 1);
+
+            BigInteger serialNumber = new BigInteger("123564879875416231576");
+            PrivateKey caKey = loadPrivKey(caPrivateKey);
+
+            X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
+            X500Principal subjectName = new X500Principal(requestCert.getCertificationRequestInfo().getSubject().toString());
+
+            certGen.setPublicKey(requestCert.getPublicKey());
+            certGen.setSerialNumber(serialNumber);
+            certGen.setIssuerDN(caCert.getSubjectX500Principal());
+            certGen.setNotBefore(startDate.getTime());
+            certGen.setNotAfter(expiryDate.getTime());
+            certGen.setSubjectDN(subjectName);
+            certGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
+
+//            certGen.addExtension(X509Extensions.SubjectAlternativeName, false, new GeneralName(GeneralName.dNSName, "hola"));
+            X509Certificate finalCert = certGen.generate(caKey, "BC");
+
+            exportToPEM(finalCert, cert);
+        } finally {
+            if (inStream != null) {
+                inStream.close();
+            }
+        }
+    }
+
+    public void autoSignCSR(File caCertFile, KeyPair caKeys, PKCS10CertificationRequest csr) throws Exception {
+        InputStream inStream = null;
+
+        try {
+            Calendar startDate = Calendar.getInstance();
+            Calendar expiryDate = Calendar.getInstance();
+            expiryDate.add(Calendar.YEAR, 1);
+
+            BigInteger serialNumber = new BigInteger("123564879875416231576");
+
+            X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
+            X500Principal subjectName = new X500Principal(csr.getCertificationRequestInfo().getSubject().toString());
+
+            certGen.setPublicKey(csr.getPublicKey());
+            certGen.setSerialNumber(serialNumber);
+            certGen.setIssuerDN(subjectName);
+            certGen.setNotBefore(startDate.getTime());
+            certGen.setNotAfter(expiryDate.getTime());
+            certGen.setSubjectDN(subjectName);
+            certGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
+
+            X509Certificate cert = certGen.generate(caKeys.getPrivate(), "BC");
+
+            exportToPEM(cert, caCertFile);
+        } finally {
+            if (inStream != null) {
+                inStream.close();
+            }
+        }
+    }
+
+    public PKCS10CertificationRequest generateCSR(KeyPair keyPair, X500Principal subjectName, File fileCSR) throws Exception {
         PKCS10CertificationRequest kpGen = new PKCS10CertificationRequest(
                 "SHA1WITHRSA",
                 subjectName,
@@ -46,7 +134,7 @@ public class CertificateUtil {
         return kpGen;
     }
 
-    public static KeyPair generatePairKeys(String publicKey, String privateKey) throws Exception {
+    public KeyPair generatePairKeys(File publicKey, File privateKey) throws Exception {
         KeyPair pair = generateAndConvertRsaKeyPair(0x10001, 2048, 25);
         Key pubKey = pair.getPublic();
         Key privKey = pair.getPrivate();
@@ -57,7 +145,7 @@ public class CertificateUtil {
         return pair;
     }
 
-    public static PrivateKey loadPrivKey(String privKeyFile) throws Exception {
+    public PrivateKey loadPrivKey(File privKeyFile) throws Exception {
         // Remove the first and last lines
         String key = readFileAsString(privKeyFile);
         String privKeyPEM = key.replace("-----BEGIN RSA PRIVATE KEY-----", "")
@@ -75,13 +163,6 @@ public class CertificateUtil {
         return privKey;
     }
 
-    public static void exportToPEM(Object obj, String fileName) throws Exception {
-        OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(fileName));
-        PEMWriter pem = new PEMWriter(output);
-        pem.writeObject(obj);
-        pem.close();
-    }
-
     /**
      * Generates and converts an RSA key pair
      *
@@ -94,7 +175,7 @@ public class CertificateUtil {
      * @throws NoSuchProviderException
      * @throws InvalidKeySpecException
      */
-    private static KeyPair generateAndConvertRsaKeyPair(long publicExponent,
+    private KeyPair generateAndConvertRsaKeyPair(long publicExponent,
             int strength, int certainty) throws Exception {
 
         Security.addProvider(new BouncyCastleProvider());
@@ -128,7 +209,7 @@ public class CertificateUtil {
         return new KeyPair(publicKey, privateKey);
     }
 
-    private static String readFileAsString(String filePath) throws java.io.IOException {
+    private String readFileAsString(File filePath) throws java.io.IOException {
         StringBuffer fileData = new StringBuffer(1000);
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         char[] buf = new char[1024];
@@ -144,4 +225,10 @@ public class CertificateUtil {
         return fileData.toString();
     }
 
+    public void exportToPEM(Object obj, File fileName) throws Exception {
+        OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(fileName));
+        PEMWriter pem = new PEMWriter(output);
+        pem.writeObject(obj);
+        pem.close();
+    }
 }

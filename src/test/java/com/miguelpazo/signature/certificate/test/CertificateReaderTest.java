@@ -1,5 +1,6 @@
 package com.miguelpazo.signature.certificate.test;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.cert.CertificateFactory;
@@ -15,9 +16,6 @@ import org.junit.Test;
  * @author Miguel Pazo (http://miguelpazo.com/)
  */
 public class CertificateReaderTest {
-
-    private String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
-    private String cert = path + "cert.p12";
 
     public CertificateReaderTest() {
     }
@@ -38,17 +36,19 @@ public class CertificateReaderTest {
     public void tearDown() {
     }
 
-//    @Test
+    @Test
     public void testMain() throws Exception {
-        readCertificate();
+        String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
+        File cert = new File(path + "cert.p12");
 
+        readCertificate(cert);
     }
 
-    public void readCertificate() throws Exception {
+    public void readCertificate(File certFile) throws Exception {
         InputStream inStream = null;
 
         try {
-            inStream = new FileInputStream(cert);
+            inStream = new FileInputStream(certFile);
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             X509Certificate cert = (X509Certificate) cf.generateCertificate(inStream);
 

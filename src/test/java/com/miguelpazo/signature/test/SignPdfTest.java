@@ -54,7 +54,7 @@ public class SignPdfTest {
     public void tearDown() {
     }
 
-//    @Test
+    @Test
     public void testMain() throws Exception {
         signPdf();
 //        verifySign();
