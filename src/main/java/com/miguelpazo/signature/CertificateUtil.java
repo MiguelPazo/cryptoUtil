@@ -1,10 +1,12 @@
 package com.miguelpazo.signature;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
@@ -246,9 +248,37 @@ public class CertificateUtil {
     }
 
     private void exportToPEM(Object obj, File fileName) throws Exception {
-        OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(fileName));
-        PEMWriter pem = new PEMWriter(output);
-        pem.writeObject(obj);
-        pem.close();
+        if (!fileName.getParentFile().exists()) {
+            fileName.getParentFile().mkdirs();
+        }
+
+        PEMWriter pem = null;
+
+        try {
+            OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(fileName));
+            pem = new PEMWriter(output);
+            pem.writeObject(obj);
+        } finally {
+            if (pem != null) {
+                pem.close();
+            }
+        }
+    }
+
+    private void exportToFile(String data, File fileName) throws Exception {
+        if (!fileName.getParentFile().exists()) {
+            fileName.getParentFile().mkdirs();
+        }
+
+        BufferedWriter output = null;
+
+        try {
+            output = new BufferedWriter(new FileWriter(fileName));
+            output.write(data);
+        } finally {
+            if (output != null) {
+                output.close();
+            }
+        }
     }
 }
