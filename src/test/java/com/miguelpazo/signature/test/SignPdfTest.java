@@ -6,6 +6,7 @@ import com.lowagie.text.pdf.PdfPKCS7;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfSignatureAppearance;
 import com.lowagie.text.pdf.PdfStamper;
+import com.miguelpazo.signature.CertificateUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,10 +29,12 @@ import org.junit.Test;
  */
 public class SignPdfTest {
 
+    private CertificateUtil certUtil;
+
     private String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
     private String certificate = path + "cert.p12";
     private String passPhraseCert = "";
-    private String privateKey = path + "private.key";
+    private File privateKey = new File(path + "private.key");
     private String pdfToSign = path + "ARCHIVO.pdf";
     private String pdfSigned = path + "ARCHIVO_FIRMADO.pdf";
 
@@ -48,6 +51,7 @@ public class SignPdfTest {
 
     @Before
     public void setUp() {
+        certUtil = CertificateUtil.getInstance();
     }
 
     @After
@@ -65,7 +69,7 @@ public class SignPdfTest {
         ks.load(new FileInputStream(certificate), passPhraseCert.toCharArray());
         String alias = (String) ks.aliases().nextElement();
         PrivateKey key = (PrivateKey) ks.getKey(alias, passPhraseCert.toCharArray());
-//        PrivateKey key = CertificateUtil.loadPrivKey(privateKey);
+        PrivateKey key1 = certUtil.loadPrivKey(privateKey);
         Certificate[] chain = ks.getCertificateChain(alias);
 
         PdfReader reader = new PdfReader(pdfToSign);
@@ -74,7 +78,7 @@ public class SignPdfTest {
         // Add sign to Pdf file
         PdfStamper stp = PdfStamper.createSignature(reader, fout, '?');
         PdfSignatureAppearance sap = stp.getSignatureAppearance();
-        sap.setCrypto(key, chain, null, PdfSignatureAppearance.WINCER_SIGNED);
+        sap.setCrypto(key1, chain, null, PdfSignatureAppearance.WINCER_SIGNED);
         sap.setReason("Firma PKCS12");
         sap.setLocation("Miguel Pazo");
         // Visible signed

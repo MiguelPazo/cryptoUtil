@@ -39,7 +39,7 @@ public class CertificateReaderTest {
     @Test
     public void main() throws Exception {
         String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
-        File cert = new File(path + "cert.p12");
+        File cert = new File(path + "cert.crt");
 
         readCertificate(cert);
     }

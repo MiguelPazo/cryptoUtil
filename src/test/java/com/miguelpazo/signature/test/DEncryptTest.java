@@ -7,18 +7,13 @@ package com.miguelpazo.signature.test;
 
 import com.miguelpazo.signature.CertificateUtil;
 import java.io.File;
-import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import javax.crypto.Cipher;
-import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.util.encoders.Base64Encoder;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
