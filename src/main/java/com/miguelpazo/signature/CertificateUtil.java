@@ -27,6 +27,7 @@ import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Calendar;
+import javax.crypto.Cipher;
 import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPairGenerator;
@@ -58,6 +59,40 @@ public class CertificateUtil {
         }
 
         return instance;
+    }
+
+    public String encryptData(Key pKey, String data) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, pKey);
+
+        byte[] encrypted = cipher.doFinal(data.getBytes());
+        byte[] encryptedVal = Base64.encode(encrypted);
+
+        return new String(encryptedVal);
+    }
+
+    public String encryptData(Key pKey, String data, File file) throws Exception {
+        String dataEncrypt = encryptData(pKey, data);
+        exportToFile(dataEncrypt, file);
+
+        return dataEncrypt;
+    }
+
+    public String decryptData(Key pKey, String dataEncrypt) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, pKey);
+
+        byte[] decodedBytes = Base64.decode(dataEncrypt.getBytes());
+        byte[] original = cipher.doFinal(decodedBytes);
+
+        return new String(original);
+    }
+
+    public String decryptData(Key pKey, String dataEncrypt, File file) throws Exception {
+        String dataDecrypt = decryptData(pKey, dataEncrypt);
+        exportToFile(dataDecrypt, file);
+
+        return dataDecrypt;
     }
 
     public void signWithCA(File caCertFile, File caPrivateKey, PKCS10CertificationRequest requestCert, File cert) throws Exception {

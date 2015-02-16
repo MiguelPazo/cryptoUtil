@@ -53,33 +53,17 @@ public class DEncryptTest {
         String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
         String data = "Hola mundo í ó ñ";
 
+        File encryptFile = new File(path + "encryptFile");
+        File decryptFile = new File(path + "decryptFile");
+        
         PrivateKey privKey = certUtil.loadPrivKey(new File(path + "private.key"));
         PublicKey publicKey = certUtil.loadPublicKey(new File(path + "public.key"));
 
-        String dataEncrypted = encryptData(publicKey, data);
-        String dataDecrypted = decryptData(privKey, dataEncrypted);
+        String dataEncrypted = certUtil.encryptData(publicKey, data, encryptFile);
+        String dataDecrypted = certUtil.decryptData(privKey, dataEncrypted, decryptFile);
 
         System.out.println("Data encryptes: " + dataEncrypted);
         System.out.println("Data decryptes: " + dataDecrypted);
     }
 
-    public String encryptData(Key pKey, String data) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.ENCRYPT_MODE, pKey);
-
-        byte[] encrypted = cipher.doFinal(data.getBytes());
-        byte[] encryptedVal = Base64.encode(encrypted);
-
-        return new String(encryptedVal);
-    }
-
-    public String decryptData(Key pKey, String dataEncrypt) throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.DECRYPT_MODE, pKey);
-
-        byte[] decodedBytes = Base64.decode(dataEncrypt.getBytes());
-        byte[] original = cipher.doFinal(decodedBytes);
-
-        return new String(original);
-    }
 }
