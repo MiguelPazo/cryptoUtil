@@ -31,13 +31,6 @@ public class SignPdfTest {
 
     private CertificateUtil certUtil;
 
-    private String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
-    private String certificate = path + "cert.p12";
-    private String passPhraseCert = "";
-    private File privateKey = new File(path + "private.key");
-    private String pdfToSign = path + "ARCHIVO.pdf";
-    private String pdfSigned = path + "ARCHIVO_FIRMADO.pdf";
-
     public SignPdfTest() {
     }
 
@@ -60,25 +53,31 @@ public class SignPdfTest {
 
     @Test
     public void main() throws Exception {
-        signPdf();
+        String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
+        File certPfx = new File(path + "cert.p12");
+        String pass = "";
+
+        File pdfToSign = new File(path + "ARCHIVO.pdf");
+        File pdfSigned = new File(path + "ARCHIVO_FIRMADO.pdf");
+
+        signPdf(pdfToSign, pdfSigned, certPfx, pass);
 //        verifySign();
     }
 
-    public void signPdf() throws Exception {
+    public void signPdf(File pdfToSign, File pdfSigned, File certPfx, String pass) throws Exception {
         KeyStore ks = KeyStore.getInstance("pkcs12");
-        ks.load(new FileInputStream(certificate), passPhraseCert.toCharArray());
+        ks.load(new FileInputStream(certPfx), pass.toCharArray());
         String alias = (String) ks.aliases().nextElement();
-        PrivateKey key = (PrivateKey) ks.getKey(alias, passPhraseCert.toCharArray());
-        PrivateKey key1 = certUtil.loadPrivKey(privateKey);
+        PrivateKey key = (PrivateKey) ks.getKey(alias, pass.toCharArray());
         Certificate[] chain = ks.getCertificateChain(alias);
 
-        PdfReader reader = new PdfReader(pdfToSign);
+        PdfReader reader = new PdfReader(pdfToSign.toString());
         FileOutputStream fout = new FileOutputStream(pdfSigned);
 
         // Add sign to Pdf file
         PdfStamper stp = PdfStamper.createSignature(reader, fout, '?');
         PdfSignatureAppearance sap = stp.getSignatureAppearance();
-        sap.setCrypto(key1, chain, null, PdfSignatureAppearance.WINCER_SIGNED);
+        sap.setCrypto(key, chain, null, PdfSignatureAppearance.WINCER_SIGNED);
         sap.setReason("Firma PKCS12");
         sap.setLocation("Miguel Pazo");
         // Visible signed
@@ -86,39 +85,39 @@ public class SignPdfTest {
         stp.close();
     }
 
-    public void verifySign() throws Exception {
-        Random rnd = new Random();
-
-        KeyStore kall = PdfPKCS7.loadCacertsKeyStore();
-        PdfReader reader = new PdfReader(pdfSigned);
-        AcroFields af = reader.getAcroFields();
-        ArrayList names = af.getSignatureNames();
-
-        for (int k = 0; k < names.size(); ++k) {
-            String name = (String) names.get(k);
-            int random = rnd.nextInt();
-            FileOutputStream out = new FileOutputStream("revision_" + random + "_" + af.getRevision(name) + ".pdf");
-
-            byte bb[] = new byte[8192];
-            InputStream ip = af.extractRevision(name);
-            int n = 0;
-            while ((n = ip.read(bb)) > 0) {
-                out.write(bb, 0, n);
-            }
-            out.close();
-            ip.close();
-
-            PdfPKCS7 pk = af.verifySignature(name);
-            Calendar cal = pk.getSignDate();
-            Certificate pkc[] = pk.getCertificates();
-            Object fails[] = PdfPKCS7.verifyCertificates(pkc, kall, null, cal);
-            if (fails == null) {
-                System.out.print(pk.getSignName());
-            } else {
-                System.out.print("Firma no válida");
-            }
-            File f = new File("revision_" + random + "_" + af.getRevision(name) + ".pdf");
-            f.delete();
-        }
-    }
+//    public void verifySign() throws Exception {
+//        Random rnd = new Random();
+//
+//        KeyStore kall = PdfPKCS7.loadCacertsKeyStore();
+//        PdfReader reader = new PdfReader(pdfSigned);
+//        AcroFields af = reader.getAcroFields();
+//        ArrayList names = af.getSignatureNames();
+//
+//        for (int k = 0; k < names.size(); ++k) {
+//            String name = (String) names.get(k);
+//            int random = rnd.nextInt();
+//            FileOutputStream out = new FileOutputStream("revision_" + random + "_" + af.getRevision(name) + ".pdf");
+//
+//            byte bb[] = new byte[8192];
+//            InputStream ip = af.extractRevision(name);
+//            int n = 0;
+//            while ((n = ip.read(bb)) > 0) {
+//                out.write(bb, 0, n);
+//            }
+//            out.close();
+//            ip.close();
+//
+//            PdfPKCS7 pk = af.verifySignature(name);
+//            Calendar cal = pk.getSignDate();
+//            Certificate pkc[] = pk.getCertificates();
+//            Object fails[] = PdfPKCS7.verifyCertificates(pkc, kall, null, cal);
+//            if (fails == null) {
+//                System.out.print(pk.getSignName());
+//            } else {
+//                System.out.print("Firma no válida");
+//            }
+//            File f = new File("revision_" + random + "_" + af.getRevision(name) + ".pdf");
+//            f.delete();
+//        }
+//    }
 }

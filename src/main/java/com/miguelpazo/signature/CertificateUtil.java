@@ -266,7 +266,7 @@ public class CertificateUtil {
         return new KeyPair(publicKey, privateKey);
     }
 
-    private String readFileAsString(File filePath) throws java.io.IOException {
+    public String readFileAsString(File filePath) throws java.io.IOException {
         StringBuffer fileData = new StringBuffer(1000);
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         char[] buf = new char[1024];
@@ -300,7 +300,7 @@ public class CertificateUtil {
         }
     }
 
-    private void exportToFile(String data, File fileName) throws Exception {
+    public void exportToFile(String data, File fileName) throws Exception {
         if (!fileName.getParentFile().exists()) {
             fileName.getParentFile().mkdirs();
         }

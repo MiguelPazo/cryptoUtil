@@ -29,16 +29,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-            <version>5.5.4</version>
-        </dependency>
-        <dependency>
             <groupId>org.eclipse.birt.runtime.3_7_1</groupId>
             <artifactId>com.lowagie.text</artifactId>
             <version>2.1.7</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15</artifactId>
             <version>1.43</version>
@@ -52,9 +47,8 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
             <version>1.48</version>
-        </dependency>
-        
-<!--        <dependency>
+        </dependency>-->
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk14</artifactId>
             <version>1.48</version>
@@ -68,7 +62,7 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk14</artifactId>
             <version>1.48</version>
-        </dependency>-->
+        </dependency>
     </dependencies>
     
     <build>

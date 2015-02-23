@@ -50,15 +50,15 @@ public class DEncryptTest {
 
         File encryptFile = new File(path + "encryptFile");
         File decryptFile = new File(path + "decryptFile");
-        
+
         PrivateKey privKey = certUtil.loadPrivKey(new File(path + "private.key"));
         PublicKey publicKey = certUtil.loadPublicKey(new File(path + "public.key"));
 
-        String dataEncrypted = certUtil.encryptData(publicKey, data, encryptFile);
-        String dataDecrypted = certUtil.decryptData(privKey, dataEncrypted, decryptFile);
+        String dataEncrypted = certUtil.encryptData(privKey, data, encryptFile);
+        String dataDecrypted = certUtil.decryptData(publicKey, dataEncrypted, decryptFile);
 
-        System.out.println("Data encryptes: " + dataEncrypted);
-        System.out.println("Data decryptes: " + dataDecrypted);
+        System.out.println("Data encrypted: " + dataEncrypted);
+        System.out.println("Data decrypted: " + dataDecrypted);
     }
 
 }
