@@ -1,9 +1,8 @@
-package com.miguelpazo.signature.certificate.test;
+package crypto.util.signature.certificate.test;
 
-import com.miguelpazo.signature.*;
-import com.miguelpazo.signature.model.Subject;
+import crypto.util.signature.CertificateUtil;
+import crypto.util.signature.model.Subject;
 import java.io.File;
-import java.io.IOException;
 import java.security.KeyPair;
 import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.jce.PKCS10CertificationRequest;
@@ -17,11 +16,11 @@ import org.junit.Test;
  *
  * @author Miguel Pazo (http://miguelpazo.com/)
  */
-public class GenerateCertificate {
+public class GenerateCA {
 
     private CertificateUtil certUtil;
 
-    public GenerateCertificate() {
+    public GenerateCA() {
     }
 
     @BeforeClass
@@ -45,13 +44,10 @@ public class GenerateCertificate {
     public void main() throws Exception {
         String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
 
+        File publicKey = new File(path + "caPublic.key");
+        File privateKey = new File(path + "caPrivate.key");
         File csr = new File(path + "reqCert.pem");
         File caCert = new File(path + "caCert.crt");
-        File caPrivateKey = new File(path + "caPrivate.key");
-
-        File publicKey = new File(path + "public.key");
-        File privateKey = new File(path + "private.key");
-        File cert = new File(path + "cert.crt");
 
         //Generate pair keys
         KeyPair keys = certUtil.generatePairKeys(publicKey, privateKey);
@@ -59,16 +55,18 @@ public class GenerateCertificate {
         //Generate CSR (Certificate Signing Request)
         PKCS10CertificationRequest requestCert = certUtil.generateCSR(keys, generateSubject(), csr);
 
-        //Sign certificate with CA
-        certUtil.signWithCA(caCert, caPrivateKey, requestCert, cert);
+        //Auto-Sign certificate with CA
+        certUtil.autoSignCSR(caCert, keys, requestCert);
     }
 
-    private X500Principal generateSubject() throws IOException {
+    private X500Principal generateSubject() {
         Subject subject = new Subject();
         subject.setCountry("PE");
         subject.setProvince("Lima");
-        subject.setLocality("San Juan de Lurigancho");
-        subject.setCommonName("Miguel Rodrigo Pazo Sánchez");
+        subject.setLocality("Lima");
+        subject.setOrgName("MiguelPazo Company");
+        subject.setOrgUnitName("Department of Certificates");
+        subject.setCommonName("MiguelPazo");
 
         X500Principal subjectName = new X500Principal(subject.toString());
 

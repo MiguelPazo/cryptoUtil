@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miguelpazo.signature.test;
+package crypto.util.signature.test;
 
 import com.lowagie.text.pdf.PdfName;
-import com.miguelpazo.signature.CertificateUtil;
+import crypto.util.signature.CertificateUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;

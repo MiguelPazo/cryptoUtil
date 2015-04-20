@@ -1,4 +1,4 @@
-package com.miguelpazo.signature.model;
+package crypto.util.signature.model;
 
 /**
  *

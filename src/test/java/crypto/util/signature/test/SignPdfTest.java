@@ -1,4 +1,4 @@
-package com.miguelpazo.signature.test;
+package crypto.util.signature.test;
 
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.AcroFields;
@@ -6,7 +6,7 @@ import com.lowagie.text.pdf.PdfPKCS7;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfSignatureAppearance;
 import com.lowagie.text.pdf.PdfStamper;
-import com.miguelpazo.signature.CertificateUtil;
+import crypto.util.signature.CertificateUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

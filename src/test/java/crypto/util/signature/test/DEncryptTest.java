@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.miguelpazo.signature.test;
+package crypto.util.signature.test;
 
-import com.miguelpazo.signature.CertificateUtil;
+import crypto.util.signature.CertificateUtil;
 import java.io.File;
 import java.security.PrivateKey;
 import java.security.PublicKey;

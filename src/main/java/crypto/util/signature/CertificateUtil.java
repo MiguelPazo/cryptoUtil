@@ -1,4 +1,4 @@
-package com.miguelpazo.signature;
+package crypto.util.signature;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package com.miguelpazo.signature.certificate.test;
+package crypto.util.signature.certificate.test;
 
 import java.io.File;
 import java.io.FileInputStream;
