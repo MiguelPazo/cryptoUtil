@@ -41,7 +41,7 @@ public class GenerateCertificate {
     public void tearDown() {
     }
 
-//    @Test
+//    @TestC
     public void main() throws Exception {
         String path = "D:\\__Software\\openssl-1.0.2-x64_86-win64\\ca\\";
 

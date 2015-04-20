@@ -134,13 +134,4 @@ public class Crypto {
         }
         return result;
     }
-
-    public static void main(String[] args) throws CryptoException {
-        Crypto crypto = Crypto.getInstance("EVA <3");
-        System.out.println(crypto.encrypt("this is a message"));
-        System.out.println(crypto.encrypt("this is a message".getBytes()));
-        System.out.println(crypto.decrypt(crypto.encrypt("this is a message")));
-        System.out.println(crypto.decrypt(crypto.encrypt("this is a message").getBytes()));
-
-    }
 }
