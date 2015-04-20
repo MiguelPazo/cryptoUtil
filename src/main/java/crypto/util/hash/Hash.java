@@ -25,7 +25,10 @@ import org.bouncycastle.util.encoders.Base64;
  */
 public class Hash {
 
-    public static String generateHash(File file) throws NoSuchAlgorithmException, NoSuchProviderException, UnsupportedEncodingException, FileNotFoundException {
+    public static String generateHash(File file) throws NoSuchAlgorithmException,
+            NoSuchProviderException,
+            UnsupportedEncodingException,
+            FileNotFoundException {
 
         String hash = null;
         //converting file to bytes
@@ -44,6 +47,7 @@ public class Hash {
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
+
         byte[] bytes = bos.toByteArray();
 
         //Here print bytes to String
