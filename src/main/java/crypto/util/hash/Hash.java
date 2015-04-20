@@ -18,6 +18,7 @@ import java.security.Security;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 
 /**
@@ -57,7 +58,7 @@ public class Hash {
         messageDigestObj.doFinal(digest, 0);
         //System.out.println(new String(Hex.encode(digest)));
 
-        return new String(Hex.encode(digest));
+        return new String(Base64.encode(digest));
     }
 
     public static byte[] convertFileToBytes(File file) throws IOException {
