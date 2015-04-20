@@ -11,13 +11,26 @@ import org.bouncycastle.crypto.engines.BlowfishEngine;
 import org.bouncycastle.crypto.modes.CBCBlockCipher;
 import org.bouncycastle.crypto.modes.PaddedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
-import org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Base64;
 
 /**
  *
  * @author jlimachi
  */
 public class Crypto {
+
+    private static Crypto instance = null;
+
+    protected Crypto() {
+        // Exists only to defeat instantiation.
+    }
+
+    public static Crypto getInstance(String key) {
+        if (instance == null) {
+            instance = new Crypto(key);
+        }
+        return instance;
+    }
 
     private BufferedBlockCipher cipher;
     private KeyParameter key;
@@ -109,9 +122,9 @@ public class Crypto {
     }
 
     public static void main(String[] args) throws CryptoException {
-        Crypto encriptor = new Crypto("EVA <3");
-        byte[] crypted = encriptor.encryptString("josmarl3444");
-        System.out.println(new String(Hex.encode(crypted)));
+        Crypto encriptor = getInstance("EVA <3");
+        byte[] crypted = encriptor.encryptString("this is a message");
+        System.out.println(new String(Base64.encode(crypted)));
         System.out.println(encriptor.decryptString(crypted));
     }
 
