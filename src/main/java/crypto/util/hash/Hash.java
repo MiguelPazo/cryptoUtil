@@ -76,13 +76,4 @@ public class Hash {
         hash = new String(Hex.encode(digest));
         return hash;
     }
-
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
-
-        Hash hashClass = getInstance();
-        String uriJar1 = "D:\\Eva Seleccion\\installevanselect.exe";
-        String hash = hashClass.generateHash(new File(uriJar1));
-        System.out.println(hash);
-
-    }
 }
