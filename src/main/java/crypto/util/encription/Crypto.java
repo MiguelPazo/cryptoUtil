@@ -77,55 +77,70 @@ public class Crypto {
         return result;
     }
 
-    // Encrypt arbitrary byte array, returning the
-    // encrypted data in a different byte array.
-    public synchronized byte[] encrypt(byte[] data)
-            throws CryptoException {
-        if (data == null || data.length == 0) {
-            return new byte[0];
-        }
+    public String encrypt(String data) throws CryptoException {
 
-        cipher.init(true, key);
-        return callCipher(data);
+        String result = null;
+
+        if (data != null) {
+            cipher.init(true, key);
+            byte[] b = callCipher(data.getBytes());
+            result = new String(Base64.encode(b));
+        } else {
+            return new String(new byte[0]);
+        }
+        return result;
     }
 
-    // Encrypts a string.
-    public byte[] encryptString(String data)
-            throws CryptoException {
-        if (data == null || data.length() == 0) {
-            return new byte[0];
-        }
+    public String encrypt(byte[] data) throws CryptoException {
 
-        return encrypt(data.getBytes());
+        String result = null;
+
+        if (data.length != 0) {
+            cipher.init(true, key);
+            byte[] b = callCipher(data);
+            result = new String(Base64.encode(b));
+        } else {
+            return new String(new byte[0]);
+        }
+        return result;
     }
 
-    // Decrypts arbitrary data.
-    public synchronized byte[] decrypt(byte[] data)
-            throws CryptoException {
-        if (data == null || data.length == 0) {
-            return new byte[0];
-        }
+    public String decrypt(String data) throws CryptoException {
 
-        cipher.init(false, key);
-        return callCipher(data);
+        String result = null;
+
+        if (data != null) {
+            cipher.init(false, key);
+            byte[] decode = Base64.decode(data);
+            byte[] b = callCipher(decode);
+            result = new String(b);
+        } else {
+            return new String(new byte[0]);
+        }
+        return result;
     }
 
-    // Decrypts a string that was previously encoded
-    // using encryptString.
-    public String decryptString(byte[] data)
-            throws CryptoException {
-        if (data == null || data.length == 0) {
-            return "";
-        }
+    public String decrypt(byte[] data) throws CryptoException {
 
-        return new String(decrypt(data));
+        String result = null;
+
+        if (data.length != 0) {
+            cipher.init(false, key);
+            byte[] decode = Base64.decode(data);
+            byte[] b = callCipher(decode);
+            result = new String(b);
+        } else {
+            return new String(new byte[0]);
+        }
+        return result;
     }
 
     public static void main(String[] args) throws CryptoException {
-        Crypto encriptor = getInstance("EVA <3");
-        byte[] crypted = encriptor.encryptString("this is a message");
-        System.out.println(new String(Base64.encode(crypted)));
-        System.out.println(encriptor.decryptString(crypted));
-    }
+        Crypto crypto = Crypto.getInstance("EVA <3");
+        System.out.println(crypto.encrypt("this is a message"));
+        System.out.println(crypto.encrypt("this is a message".getBytes()));
+        System.out.println(crypto.decrypt(crypto.encrypt("this is a message")));
+        System.out.println(crypto.decrypt(crypto.encrypt("this is a message").getBytes()));
 
+    }
 }

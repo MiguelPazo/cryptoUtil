@@ -7,7 +7,6 @@ package crypto.util.crypto.test;
 
 import crypto.util.encription.Crypto;
 import org.bouncycastle.crypto.CryptoException;
-import org.bouncycastle.util.encoders.Base64;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,10 +44,11 @@ public class CrytoTest {
     @Test
     public void Encriptar() throws CryptoException {
 
-        Crypto encriptor = Crypto.getInstance("EVA <3");
-        byte[] crypted = encriptor.encryptString("this is a message");
-        System.out.println(new String(Base64.encode(crypted)));
-        System.out.println(encriptor.decryptString(crypted));
+        Crypto crypto = Crypto.getInstance("EVA <3");
+        System.out.println(crypto.encrypt("this is a message"));
+        System.out.println(crypto.encrypt("this is a message".getBytes()));
+        System.out.println(crypto.decrypt(crypto.encrypt("this is a message")));
+        System.out.println(crypto.decrypt(crypto.encrypt("this is a message").getBytes()));
 
     }
 }

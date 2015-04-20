@@ -5,7 +5,6 @@
  */
 package crypto.util.hash;
 
-import crypto.util.encription.Crypto;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +17,7 @@ import java.security.Security;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 
 /**
@@ -73,7 +73,7 @@ public class Hash {
         messageDigestObj.update(bytes, 0, bytes.length);
         messageDigestObj.doFinal(digest, 0);
         //System.out.println(new String(Hex.encode(digest)));
-        hash = new String(Hex.encode(digest));
+        hash = new String(Base64.encode(digest));
         return hash;
     }
 }
