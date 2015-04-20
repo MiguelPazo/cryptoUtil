@@ -121,11 +121,4 @@ public class Crypto {
         return new String(decrypt(data));
     }
 
-    public static void main(String[] args) throws CryptoException {
-        Crypto encriptor = getInstance("EVA <3");
-        byte[] crypted = encriptor.encryptString("this is a message");
-        System.out.println(new String(Base64.encode(crypted)));
-        System.out.println(encriptor.decryptString(crypted));
-    }
-
 }
