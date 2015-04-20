@@ -5,6 +5,7 @@
  */
 package crypto.util.hash;
 
+import crypto.util.encription.Crypto;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +18,7 @@ import java.security.Security;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.encoders.Hex;
 
 /**
  *
@@ -25,7 +26,20 @@ import org.bouncycastle.util.encoders.Base64;
  */
 public class Hash {
 
-    public static String generateHash(File file) throws NoSuchAlgorithmException,
+    private static Hash instance = null;
+
+    protected Hash() {
+        // Exists only to defeat instantiation.
+    }
+
+    public static Hash getInstance() {
+        if (instance == null) {
+            instance = new Hash();
+        }
+        return instance;
+    }
+
+    public String generateHash(File file) throws NoSuchAlgorithmException,
             NoSuchProviderException,
             UnsupportedEncodingException,
             FileNotFoundException {
@@ -59,14 +73,15 @@ public class Hash {
         messageDigestObj.update(bytes, 0, bytes.length);
         messageDigestObj.doFinal(digest, 0);
         //System.out.println(new String(Hex.encode(digest)));
-        hash = new String(Base64.encode(digest));
-        return hash.substring(0, hash.length() - 1);
+        hash = new String(Hex.encode(digest));
+        return hash;
     }
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
 
+        Hash hashClass = getInstance();
         String uriJar1 = "D:\\Eva Seleccion\\installevanselect.exe";
-        String hash = Hash.generateHash(new File(uriJar1));
+        String hash = hashClass.generateHash(new File(uriJar1));
         System.out.println(hash);
 
     }
