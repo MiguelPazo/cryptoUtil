@@ -14,11 +14,12 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.util.encoders.Hex;
 
 /**
  *
@@ -39,14 +40,16 @@ public class Hash {
         return instance;
     }
 
-    public String generateHash(File file) throws NoSuchAlgorithmException,
-            NoSuchProviderException,
-            UnsupportedEncodingException,
-            FileNotFoundException {
+    public String generateHash(File file) {
 
         String hash = null;
         //converting file to bytes
-        FileInputStream fis = new FileInputStream(file);
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Hash.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //System.out.println(file.exists() + "!!");
         //InputStream in = resource.openStream();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -73,7 +76,8 @@ public class Hash {
         messageDigestObj.update(bytes, 0, bytes.length);
         messageDigestObj.doFinal(digest, 0);
         //System.out.println(new String(Hex.encode(digest)));
-        hash = new String(Base64.encode(digest));
+        hash = new String(Base64.encode(digest)).replace("/", "").replace("=", "");
         return hash;
     }
+
 }

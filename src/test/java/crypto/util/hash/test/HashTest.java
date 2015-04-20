@@ -7,14 +7,7 @@ package crypto.util.hash.test;
 
 import crypto.util.hash.Hash;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.util.encoders.Hex;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -51,14 +44,11 @@ public class HashTest {
     //
     @Test
     public void hashTest() {
+
         Hash h = Hash.getInstance();
-        try {
-            String versionH = h.generateHash(new File("D:\\Eva Seleccion\\installevanselect.exe"));
-            System.out.println(versionH);
-            System.out.println(new String(Base64.decode(versionH)));
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | UnsupportedEncodingException | FileNotFoundException ex) {
-            Logger.getLogger(HashTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String versionH = h.generateHash(new File("D:\\Eva Seleccion\\installevanselect.exe"));
+        System.out.println(versionH);
+        System.out.println(new String(Base64.decode(versionH)));
 
     }
 }
