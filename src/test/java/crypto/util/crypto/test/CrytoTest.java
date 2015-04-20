@@ -6,16 +6,13 @@
 package crypto.util.crypto.test;
 
 import crypto.util.encription.Crypto;
-import static crypto.util.encription.Crypto.getInstance;
 import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.util.encoders.Hex;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
