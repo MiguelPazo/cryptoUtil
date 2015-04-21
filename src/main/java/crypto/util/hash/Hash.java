@@ -10,12 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -40,29 +35,23 @@ public class Hash {
         return instance;
     }
 
-    public String generateHash(File file) {
+    public String generateHash(File file) throws FileNotFoundException, IOException {
 
         String hash = null;
         //converting file to bytes
         FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Hash.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        fis = new FileInputStream(file);
+
         //System.out.println(file.exists() + "!!");
         //InputStream in = resource.openStream();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buf = new byte[1024];
 
-        try {
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                bos.write(buf, 0, readNum); //no doubt here is 0
-                //Writes len bytes from the specified byte array starting at offset off to this byte array output stream.
-                System.out.println("read " + readNum + " bytes,");
-            }
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+        for (int readNum; (readNum = fis.read(buf)) != -1;) {
+            bos.write(buf, 0, readNum); //no doubt here is 0
+            //Writes len bytes from the specified byte array starting at offset off to this byte array output stream.
+            System.out.println("read " + readNum + " bytes,");
         }
 
         byte[] bytes = bos.toByteArray();
@@ -74,6 +63,22 @@ public class Hash {
         Digest messageDigestObj = new SHA1Digest();
         byte[] digest = new byte[messageDigestObj.getDigestSize()];
         messageDigestObj.update(bytes, 0, bytes.length);
+        messageDigestObj.doFinal(digest, 0);
+        //System.out.println(new String(Hex.encode(digest)));
+        hash = new String(Base64.encode(digest)).replace("/", "").replace("=", "");
+        return hash;
+    }
+
+    public String generateHash(String data) throws FileNotFoundException, IOException {
+
+        String hash = null;
+        //Here print bytes to String
+        //System.out.println(SecurityUtils.getHexString(bytes));
+        //Hash bytes
+        Security.addProvider(new BouncyCastleProvider());
+        Digest messageDigestObj = new SHA1Digest();
+        byte[] digest = new byte[messageDigestObj.getDigestSize()];
+        messageDigestObj.update(data.getBytes(), 0, data.getBytes().length);
         messageDigestObj.doFinal(digest, 0);
         //System.out.println(new String(Hex.encode(digest)));
         hash = new String(Base64.encode(digest)).replace("/", "").replace("=", "");
