@@ -36,12 +36,6 @@ public class Hash {
     }
 
     public String generateHash(File file, Boolean replace) throws FileNotFoundException, IOException {
-        String hash = generateHash(file);
-
-        return hash.replace("/", "").replace("=", "");
-    }
-
-    public String generateHash(File file) throws FileNotFoundException, IOException {
         String hash = null;
         //converting file to bytes
         FileInputStream fis = null;
@@ -66,16 +60,14 @@ public class Hash {
         messageDigestObj.doFinal(digest, 0);
         hash = new String(Base64.encode(digest));
 
+        if (replace) {
+            hash = hash.replace("/", "").replace("=", "");
+        }
+
         return hash;
     }
 
-    public String generateHash(String data, Boolean replace) throws FileNotFoundException, IOException {
-        String hash = generateHash(data);
-
-        return hash.replace("/", "").replace("=", "");
-    }
-
-    public String generateHash(String data) throws FileNotFoundException, IOException {
+    public String generateHash(String data, Boolean replace) {
         String hash = null;
         Security.addProvider(new BouncyCastleProvider());
         Digest messageDigestObj = new SHA1Digest();
@@ -84,6 +76,10 @@ public class Hash {
         messageDigestObj.doFinal(digest, 0);
 
         hash = new String(Base64.encode(digest));
+
+        if (replace) {
+            hash = hash.replace("/", "").replace("=", "");
+        }
 
         return hash;
     }
