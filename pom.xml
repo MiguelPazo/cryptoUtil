@@ -14,14 +14,6 @@
         <mainClass>Its a library</mainClass>
     </properties>
     
-    <repositories>
-        <repository>
-            <id>onpemaven</id>
-            <name>onpemaven-releases</name>
-            <url>http://172.16.80.57:8081/artifactory/ext-release-local</url>
-        </repository>
-    </repositories>
-    
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
