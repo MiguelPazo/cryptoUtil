@@ -12,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pe.gob.onpe.eva.security.EvaKeys;
 
 /**
  *
@@ -43,12 +44,11 @@ public class CrytoTest {
     //
     @Test
     public void Encriptar() throws CryptoException {
-
-        Crypto crypto = Crypto.getInstance("EVA <3");
-        System.out.println(crypto.encrypt("this is a message"));
-        System.out.println(crypto.encrypt("this is a message".getBytes()));
-        System.out.println(crypto.decrypt(crypto.encrypt("this is a message")));
-        System.out.println(crypto.decrypt(crypto.encrypt("this is a message").getBytes()));
+        Crypto crypto = Crypto.getInstance(EvaKeys.ENCRYPT);
+        String data = "jjdbc:oracle:thin:EVA_DEV/EVA_DEV@192.168.49.149:1521:BDD3S4";
+        String dataEncrypt = crypto.encrypt(data);
+        System.out.println(dataEncrypt);
+        System.out.println(crypto.decrypt(dataEncrypt));
 
     }
 }

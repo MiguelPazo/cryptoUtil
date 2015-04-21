@@ -47,10 +47,8 @@ public class HashTest {
     public void hashTest() throws IOException {
 
         Hash h = Hash.getInstance();
-        String versionH = h.generateHash(new File("D:\\Eva Seleccion\\installevanselect.exe"));
+        String versionH = h.generateHash("config.eva", false);
         System.out.println(versionH);
-        System.out.println(new String(Base64.decode(versionH)));
-        System.out.println(h.generateHash("this is a message"));
 
     }
 }

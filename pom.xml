@@ -64,6 +64,11 @@
             <artifactId>bcpkix-jdk14</artifactId>
             <version>1.48</version>
         </dependency>
+        <dependency>
+            <groupId>pe.gob.onpe.eva</groupId>
+            <artifactId>evaSecurity</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     
     <build>
