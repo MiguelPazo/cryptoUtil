@@ -21,7 +21,7 @@ public class Crypto {
 
     private static Crypto instance = null;
 
-    protected Crypto() {
+    private Crypto() {
         // Exists only to defeat instantiation.
     }
 
