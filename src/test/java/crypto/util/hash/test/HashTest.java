@@ -6,9 +6,7 @@
 package crypto.util.hash.test;
 
 import crypto.util.hash.Hash;
-import java.io.File;
 import java.io.IOException;
-import org.bouncycastle.util.encoders.Base64;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,5 +48,11 @@ public class HashTest {
         String versionH = h.generateHash("config.eva", false);
         System.out.println(versionH);
 
+    }
+    
+    public static void main(String[] args) {
+        Hash h = Hash.getInstance();
+        String versionH = h.generateHash("123", false);
+        System.out.println(versionH);
     }
 }
