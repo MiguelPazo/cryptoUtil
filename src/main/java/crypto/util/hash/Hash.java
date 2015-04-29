@@ -15,6 +15,7 @@ import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.encoders.Hex;
 
 /**
  *
@@ -80,6 +81,20 @@ public class Hash {
         if (replace) {
             hash = hash.replace("/", "").replace("=", "");
         }
+
+        return hash;
+    }
+
+    public String generateHashHex(String data) {
+
+        String hash = null;
+        Security.addProvider(new BouncyCastleProvider());
+        Digest messageDigestObj = new SHA1Digest();
+        byte[] digest = new byte[messageDigestObj.getDigestSize()];
+        messageDigestObj.update(data.getBytes(), 0, data.getBytes().length);
+        messageDigestObj.doFinal(digest, 0);
+
+        hash = new String(Hex.encode(digest));
 
         return hash;
     }

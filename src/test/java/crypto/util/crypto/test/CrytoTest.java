@@ -39,14 +39,11 @@ public class CrytoTest {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     @Test
     public void Encriptar() throws CryptoException {
 
         Crypto crypto = Crypto.getInstance(EvaKeys.ENCRYPT);
-        String data = "jjdbc:oracle:thin:EVA_CARGA/EVA_CARGA@192.168.49.149:1521:BDD3S4";
+        String data = "jjdbc:oracle:thin:EVA_DEV/EVA_DEV@192.168.49.149:1521:BDD3S4";
         String dataEncrypt = crypto.encrypt(data);
         System.out.println(dataEncrypt);
         System.out.println(crypto.decrypt(dataEncrypt));
@@ -54,27 +51,13 @@ public class CrytoTest {
     }
 
     public static void main(String[] args) throws CryptoException {
+
         Crypto crypto = Crypto.getInstance(EvaKeys.ENCRYPT);
-        String data = "VFH/arruh2l8DViE3CtReMi5rLfSc1A/Nt2yfUwyFObdsWS8STXxrE/"
-                + "VLmBhbhAH16EaCBnoW6SGKM58sSgQiBkQuWNjfzf6Xhgds2WA14DKKLigeIE7Yfpza/"
-                + "WT42Q6/A2Sm+Wsx9eQ3bJMe9gGwGU+611PW6dc/"
-                + "R67HAYjKDMXJoSSx4wrBGVUPDwwKpSYrsnixZ1REPS2t8VGb0aR5mTIsWur1"
-                + "dr2gpURTlmxJB4qaVBheXhUTOYr0TBmV4D5Rbcwa6Nfsb5QuW2+cHkSjVs1YWc"
-                + "dtE2Q3mdrlda+XleWLsQoSczbA60Vtv6hb7bX9yfRS35BhRJ7cMiXJoD1aM7CYeQ16c"
-                + "MVoDP55YO5BUvc0ss+S7th3JSsTLBpv/FxDJGGGXno00tVqCSBBEq7Oeh264DeLNblY"
-                + "lTfxMM0nHA2E+iaantCbuTcOCkiQFMKB54ivNWBqR4TZvjpF3O/5kIPgePSkKZdQLQg72e"
-                + "JchLrs6JU4SP8ssSDi7txX7uAHAG76llSKhmGjMOvmWtw4IZmM3WCpqIJKYDJZ8oL"
-                + "yy6qpVBfuGDjY2ospGkX8o+bN8DdLOlpYjkSFqVS/BzJ5IRJ/WP8/HX8K+vfgjYLMiMoiG"
-                + "DGCfp+CALbQwEeZSsetphtXvQyjH491avE0AH/vn1XbIzz2a7535d6uP/cJpMtZ1/5Caz5"
-                + "knWx/y53Ch6OC+fA98HTQtiEsh9vR4kYdWGd3gArGubygST7aHuVi1NTESm92NASXbB9kp"
-                + "mEgyv0W7XW28tJ2DYa1O6YhoGWge84GjgiH41NtGO/JxKheHpoyJ1/EfMBg660fy8A3sTK"
-                + "WOZeY88fgWaRop8Vk3WG18iBCBwwlllUeydkbVnv7GKJBQJlqqKVxxj89sRfPt/4TQHnow"
-                + "YZuHoZB401lBfULbrwiMLDWBuwkTfJPbIGr7q4EkbrU0ZPmYQ3GKRAksclSa+QFJlY8cJZhjJ"
-                + "A2ZOYrliKrAanCphsZVngNbBymqBolgjEK/UzloPpb+lCp2OziXrInylIr4XHuGUHvoDC"
-                + "+a2xWF04W5CZ+nts6BKIR9eDhvRasvZuNsB8gLH1vOtxyLYIiobTPlPzFZj4LXGcllfS1"
-                + "U/Vl2BQ5rpJSKwTyWPiDsirzJQ9oKhM9Xy8m1oq";
-        String dataEncrypt = crypto.decrypt(data);
+        String data = "jjdbc:oracle:thin:EVA_DEV/EVA_DEV@192.168.49.149:1521:BDD3S4";
+        String dataEncrypt = crypto.encrypt(data);
         System.out.println(dataEncrypt);
-        //System.out.println(crypto.decrypt(dataEncrypt));
+        System.out.println(crypto.decrypt(dataEncrypt));
+        
+        System.out.println(crypto.decrypt("VFH/arruh2l8DViE3CtReMi5rLfSc1A/Nt2yfUwyFOaPf+0eVqYfFaUugLxkCQJctfGRn1TRGgLw3fO6UybgFdMVOrSvBk8uzAwo6EN5GxLTMNuCf1nn93r957sasbt1y2woD28RtD5Fsovp7z22f3NlPoQqyM8QVN+/knx/6Zc3X51o9BrQvcBHhsF8zDUKzbgifHuRjyCvPjcaiCwlJRyDOQt/JFQjADNVp6zV0lzs5G9+y6FWLGJDi8AiwSlkLTAkT2WZBRi50wOj295+0dKyzDCWYMEOn3r5S7h4gBkF+JvRXtEvDoSMw5sbujgMHZZPVf4ZPoE4ZLUK8fTYAIt/OtL2ONJAt3eZeI6N6T7P0INAuLnEgkua6aDsKW3APY0CJXPS3yu0XCFh2dIQJyrxwoYWhWA3inFMirH5qwZ2ShDrVppwkQj+Nvum311CGb/9E98S75QHqNMXrpwOxcytg9DAA5p8MWqtukh7A2+JLtloIUFA8RV73HfDwJdKDGUsmmwkIlikniOJ8zS9wfzMrN+WfgkMgXc54a75/xoItOIhhJs77zh5/GZERvM4CVAHEttfskGtac9c+UhWuRaIdHUaNnM5KQ5EuLm250QRa+CAC0+e13C60auKeZXh6tHEi4HubSogOqKHZHtXEDdUhQ5wxyANVR6YHs2XD0kcmGPMx9AzPWJKmsdtVFzb3jlwsa5Lx8BqrokgSz5yc3Zlw0u6iLj+Cw83uPH/M0QKWrTcFq8cRtvDYx1LM33m/bhxIQdm1rDLTepv3tFYHWBSQChURJZKrbRxO21zWfZayELLnTBuh/ih55HEMPqNFkksqwQJRLd0GHj4et8A1hkqtMdMqR/vn9zya2eNQliFV5n7ISserUacvo1aRlnbqpTnfmp2XhKqrihyGSWHH5xqSo9CUIxO7bG6nX+yC+2ttq9G2K3/09tR1KlX+8AsxELMH8Xy0ocY4xNI2RPb5CypRL2FmRj5/pTtE6WpRbH9dI4RmGCkfJiPXOewpsC04gqMfIOHaeZbjS3//jsQoNRoTYh3yDBzGio30JDYNkeSYxypjsS0ZicRwXCFhMspIl9w4ozTVBOBcWi79ablRl4yxJyMVcgojkeMZJLyB9LuxjmklCszunr6GhZnaR83"));
     }
 }
